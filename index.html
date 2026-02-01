@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Message</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe4e1; /* Soft Pink */
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+        #container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        h1 { color: #d63384; margin-bottom: 30px; }
+        .buttons { display: flex; justify-content: center; gap: 20px; }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #yesBtn { background-color: #ff4d6d; color: white; }
+        #noBtn { 
+            background-color: #adb5bd; 
+            color: white; 
+            position: absolute; 
+        }
+        img { width: 200px; border-radius: 10px; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1 id="question">Nirali, will you be my Valentine? ❤️</h1>
+        <div class="buttons">
+            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="noBtn" onmouseover="moveButton()">No</button>
+        </div>
+        <div id="celebration" style="display:none;">
+            <h1>YAY! I knew it! 🎉</h1>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIyeG0zamR4bm96MTJqZzR4bm96MTJqZzR4bm96MTJqZzR4bm96JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lTfuxV6mN8WpBS/giphy.gif" style="display:block; margin: 0 auto;">
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const container = document.getElementById('container');
+
+        function moveButton() {
+            // This makes the button jump to a random spot within the screen
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        function celebrate() {
+            document.getElementById('question').style.display = 'none';
+            document.querySelector('.buttons').style.display = 'none';
+            document.getElementById('celebration').style.display = 'block';
+            
+            // Add some confetti if you want to be extra
+            for(let i=0; i<50; i++) { createConfetti(); }
+        }
+
+        // Basic confetti effect
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.innerText = '🌸';
+            confetti.style.position = 'fixed';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.animation = 'fall 3s linear forwards';
+            document.body.appendChild(confetti);
+        }
+    </script>
+
+    <style>
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
