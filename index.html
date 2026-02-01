@@ -2,74 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will You Be Mine?</title>
     <style>
-        /* Force full height for mobile screens */
-        html, body {
+        body, html {
             height: 100%;
-            width: 100%;
             margin: 0;
-            padding: 0;
-            overflow: hidden; /* Prevents unwanted scrolling */
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #fff0f3;
-        }
-
-        body {
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #fff0f3;
         }
 
-        /* Dedicated Image Tag for better mobile compatibility */
-        #mobile-bg {
+        .bg-image {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* This makes it fill the screen perfectly */
-            opacity: 0.4;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.35;
             z-index: -1;
         }
 
         #main-card {
-            background: rgba(255, 255, 255, 0.92);
-            padding: 25px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             text-align: center;
-            max-width: 320px;
-            width: 85%;
+            max-width: 450px;
+            width: 90%;
             border: 4px solid #ff4d6d;
             z-index: 10;
         }
 
-        .kitty-img { width: 100px; margin-bottom: 10px; }
-        h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 15px; }
+        .kitty-img { width: 140px; margin-bottom: 15px; }
+        h1 { color: #ff4d6d; font-size: 1.8rem; margin-bottom: 20px; }
 
         .btn-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
-            min-height: 80px;
+            gap: 20px;
+            min-height: 120px;
             position: relative;
         }
 
         button {
-            padding: 12px 24px;
-            font-size: 1.1rem;
+            padding: 15px 35px;
+            font-size: 1.2rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            touch-action: manipulation;
+            transition: all 0.15s ease;
         }
 
         #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
-        #noBtn { background: #6c757d; color: white; position: relative; z-index: 1000; }
+
+        #noBtn {
+            background: #6c757d;
+            color: white;
+            position: relative;
+            z-index: 1000;
+        }
 
         .popup {
             display: none;
@@ -77,25 +75,25 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+            box-shadow: 0 0 100px rgba(0,0,0,0.4);
             z-index: 9999;
             text-align: center;
             border: 3px solid #ff4d6d;
-            width: 250px;
+            width: 280px;
         }
 
-        .popup button { background: #ff4d6d; color: white; margin-top: 10px; padding: 8px 15px; }
+        .popup button { background: #ff4d6d; color: white; margin-top: 15px; padding: 10px 20px; border-radius: 10px; }
         #final-screen { display: none; }
-        .celebrate-gif { width: 100%; border-radius: 15px; margin-top: 15px; }
+        .celebrate-gif { width: 100%; border-radius: 20px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <img id="mobile-bg" src="https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true" alt="background">
+    <div class="bg-image"></div>
 
-    <audio id="bgMusic" loop preload="auto">
+    <audio id="bgMusic" loop>
         <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
     </audio>
 
@@ -110,15 +108,15 @@
         </div>
 
         <div id="final-screen">
-            <h1>YAY! ❤️ I love you! 🎉</h1>
+            <h1 id="final-text">YAY! ❤️ I love you! 🎉</h1>
             <p>I found a girl, beautiful and sweet... 🎶</p>
             <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" class="celebrate-gif">
         </div>
     </div>
 
     <div id="popup" class="popup">
-        <h2 id="popup-title" style="margin: 0; font-size: 1.1rem; color: #ff4d6d;"></h2>
-        <p id="popup-msg" style="font-size: 0.9rem;"></p>
+        <h2 id="popup-title"></h2>
+        <p id="popup-msg"></p>
         <button onclick="closePopup()">Close</button>
     </div>
 
@@ -134,15 +132,13 @@
         ];
 
         function moveNo() {
+            // Note: Music play removed from here
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
            
             noBtn.style.position = 'fixed';
-            
-            // Ensures button stays within mobile screen view
-            const x = Math.max(10, Math.random() * (window.innerWidth - 80));
-            const y = Math.max(10, Math.random() * (window.innerHeight - 40));
-            
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
@@ -156,10 +152,8 @@
             }, 300);
 
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            if(currentSize < 50) { 
-                yesBtn.style.fontSize = (currentSize + 5) + 'px';
-                yesBtn.style.padding = (currentSize / 2) + 'px';
-            }
+            yesBtn.style.fontSize = (currentSize + 8) + 'px';
+            yesBtn.style.padding = (currentSize / 2 + 5) + 'px';
         }
 
         function closePopup() {
@@ -167,8 +161,11 @@
         }
 
         function showFinal() {
-            // Play music - essential for mobile to play on click
-            music.play();
+            // MUSIC STARTS HERE
+            music.play().catch(error => {
+                console.log("Playback failed, but button was clicked.");
+            });
+            
             document.getElementById('ask-screen').style.display = 'none';
             document.getElementById('noBtn').style.display = 'none';
             document.getElementById('final-screen').style.display = 'block';
@@ -176,13 +173,13 @@
         }
 
         function confetti() {
-            for(let i=0; i<50; i++) {
+            for(let i=0; i<100; i++) {
                 const heart = document.createElement('div');
                 heart.innerHTML = '❤️';
                 heart.style.position = 'fixed';
                 heart.style.left = Math.random() * 100 + 'vw';
                 heart.style.top = '-20px';
-                heart.style.fontSize = '15px';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
                 heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
                 document.body.appendChild(heart);
             }
