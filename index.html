@@ -5,80 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Will You Be Mine?</title>
     <style>
-        body, html {
+        /* Force full height for mobile screens */
+        html, body {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
+            overflow: hidden; /* Prevents unwanted scrolling */
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background-color: #fff0f3;
         }
 
-        /* IMPROVED RESPONSIVE BACKGROUND */
-        .bg-image {
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Dedicated Image Tag for better mobile compatibility */
+        #mobile-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* FIXED IMAGE LINK */
-            background-image: url('https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true');
-            background-size: cover; /* This makes it fill the screen */
-            background-position: center center; /* Keeps her centered */
-            background-repeat: no-repeat;
+            object-fit: cover; /* This makes it fill the screen perfectly */
             opacity: 0.4;
             z-index: -1;
-            /* Extra fix for mobile browsers */
-            background-attachment: scroll; 
         }
 
         #main-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 25px;
             border-radius: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             text-align: center;
-            max-width: 350px; /* Slimmer for phone compatibility */
+            max-width: 320px;
             width: 85%;
             border: 4px solid #ff4d6d;
             z-index: 10;
         }
 
-        .kitty-img { width: 120px; margin-bottom: 10px; }
-        h1 { color: #ff4d6d; font-size: 1.5rem; margin-bottom: 15px; }
+        .kitty-img { width: 100px; margin-bottom: 10px; }
+        h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 15px; }
 
         .btn-container {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
-            min-height: 100px;
+            min-height: 80px;
             position: relative;
         }
 
         button {
-            padding: 12px 25px;
+            padding: 12px 24px;
             font-size: 1.1rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.15s ease;
-            touch-action: manipulation; /* Optimizes for mobile tapping */
+            touch-action: manipulation;
         }
 
         #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
-
-        #noBtn {
-            background: #6c757d;
-            color: white;
-            position: relative;
-            z-index: 1000;
-        }
+        #noBtn { background: #6c757d; color: white; position: relative; z-index: 1000; }
 
         .popup {
             display: none;
@@ -92,26 +83,19 @@
             z-index: 9999;
             text-align: center;
             border: 3px solid #ff4d6d;
-            width: 260px;
+            width: 250px;
         }
 
-        .popup button { background: #ff4d6d; color: white; margin-top: 10px; padding: 8px 15px; font-size: 0.9rem; }
+        .popup button { background: #ff4d6d; color: white; margin-top: 10px; padding: 8px 15px; }
         #final-screen { display: none; }
         .celebrate-gif { width: 100%; border-radius: 15px; margin-top: 15px; }
-
-        /* Media query for very small phones */
-        @media (max-height: 600px) {
-            #main-card { padding: 15px; }
-            h1 { font-size: 1.2rem; }
-            .kitty-img { width: 80px; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="bg-image"></div>
+    <img id="mobile-bg" src="https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true" alt="background">
 
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop preload="auto">
         <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
     </audio>
 
@@ -133,4 +117,82 @@
     </div>
 
     <div id="popup" class="popup">
-        <h2 id
+        <h2 id="popup-title" style="margin: 0; font-size: 1.1rem; color: #ff4d6d;"></h2>
+        <p id="popup-msg" style="font-size: 0.9rem;"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        let noCount = 0;
+        const music = document.getElementById('bgMusic');
+        const messages = [
+            {title: "🤨 Wait...", msg: "Did you just try to click No?"},
+            {title: "🙄 Nice try!", msg: "That's not even an option today."},
+            {title: "🤨 Hey!", msg: "Girl, you are mine. Stop playing!"},
+            {title: "😱 Oh No!", msg: "The 'No' button is definitely broken..."},
+            {title: "❤️ Give up!", msg: "Just say Yes already! 🥰"}
+        ];
+
+        function moveNo() {
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+           
+            noBtn.style.position = 'fixed';
+            
+            // Ensures button stays within mobile screen view
+            const x = Math.max(10, Math.random() * (window.innerWidth - 80));
+            const y = Math.max(10, Math.random() * (window.innerHeight - 40));
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+
+            setTimeout(() => {
+                if (noCount < messages.length) {
+                    document.getElementById('popup-title').innerText = messages[noCount].title;
+                    document.getElementById('popup-msg').innerText = messages[noCount].msg;
+                    document.getElementById('popup').style.display = 'block';
+                    noCount++; 
+                }
+            }, 300);
+
+            let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            if(currentSize < 50) { 
+                yesBtn.style.fontSize = (currentSize + 5) + 'px';
+                yesBtn.style.padding = (currentSize / 2) + 'px';
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function showFinal() {
+            // Play music - essential for mobile to play on click
+            music.play();
+            document.getElementById('ask-screen').style.display = 'none';
+            document.getElementById('noBtn').style.display = 'none';
+            document.getElementById('final-screen').style.display = 'block';
+            confetti();
+        }
+
+        function confetti() {
+            for(let i=0; i<50; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '-20px';
+                heart.style.fontSize = '15px';
+                heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                document.body.appendChild(heart);
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
