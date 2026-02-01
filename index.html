@@ -16,18 +16,14 @@
             background-color: #fff0f3;
         }
 
-        /* THE TRANSPARENT BACKGROUND */
         .bg-image {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* REPLACE THE LINK BELOW WITH YOUR GIRL'S PHOTO LINK */
-            background-image: url('https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg');
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* FIXED IMAGE LINK */
+            background-image: url('https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true');
             background-size: cover;
             background-position: center;
-            opacity: 0.35; 
+            opacity: 0.35;
             z-index: -1;
         }
 
@@ -62,7 +58,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.15s ease;
+            transition: all 0.1s ease;
         }
 
         #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
@@ -70,16 +66,14 @@
         #noBtn {
             background: #6c757d;
             color: white;
-            position: absolute; 
+            position: relative; /* Fixed: Started as absolute which hides it */
             z-index: 1000;
         }
 
-        /* POPUP STYLING */
         .popup {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: white;
             padding: 25px;
@@ -91,8 +85,7 @@
             width: 280px;
         }
 
-        .popup button { background: #ff4d6d; color: white; margin-top: 15px; padding: 10px 20px; }
-
+        .popup button { background: #ff4d6d; color: white; margin-top: 15px; padding: 10px 20px; border-radius: 10px; }
         #final-screen { display: none; }
         .celebrate-gif { width: 100%; border-radius: 20px; margin-top: 20px; }
     </style>
@@ -102,8 +95,8 @@
     <div class="bg-image"></div>
 
     <audio id="bgMusic" loop>
-        <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3">
-        </audio>
+        <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
+    </audio>
 
     <div id="main-card">
         <div id="ask-screen">
@@ -118,7 +111,7 @@
         <div id="final-screen">
             <h1>YAY! ❤️ I love you! 🎉</h1>
             <p>I found a girl, beautiful and sweet... 🎶</p>
-            <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.web">
+            <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" class="celebrate-gif">
         </div>
     </div>
 
@@ -140,13 +133,11 @@
         ];
 
         function moveNo() {
-            // Start music on first interaction
-            music.play();
-
+            music.play().catch(e => console.log("Music waiting for interaction"));
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            
-            // Random movement
+           
+            noBtn.style.position = 'fixed';
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 50);
             noBtn.style.left = x + 'px';
@@ -158,11 +149,10 @@
                 document.getElementById('popup').style.display = 'block';
             }
 
-            // Yes button grows
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize + 12) + 'px';
-            yesBtn.style.padding = (currentSize + 5) + 'px';
-            
+            yesBtn.style.fontSize = (currentSize + 10) + 'px';
+            yesBtn.style.padding = (currentSize / 2 + 5) + 'px';
+           
             noCount++;
         }
 
@@ -171,7 +161,7 @@
         }
 
         function showFinal() {
-            music.play(); // Ensure music plays
+            music.play();
             document.getElementById('ask-screen').style.display = 'none';
             document.getElementById('noBtn').style.display = 'none';
             document.getElementById('final-screen').style.display = 'block';
