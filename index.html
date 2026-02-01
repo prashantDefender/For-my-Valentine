@@ -1,4 +1,4 @@
-,<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,12 +11,10 @@
             overflow: hidden; display: flex; justify-content: center; align-items: center;
             background-color: #fff0f3;
         }
-
         #mobile-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; opacity: 0.4; z-index: -1;
         }
-
         .card {
             background: rgba(255, 255, 255, 0.95);
             padding: 30px; border-radius: 30px;
@@ -24,26 +22,20 @@
             text-align: center; max-width: 350px; width: 85%;
             border: 4px solid #ff4d6d; z-index: 10;
         }
-
         .kitty-img { width: 120px; margin-bottom: 15px; }
         h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 20px; min-height: 80px; }
-
         .btn-container {
             display: flex; justify-content: center; gap: 15px;
             min-height: 120px; position: relative;
         }
-
         button {
             padding: 12px 28px; font-size: 1.1rem; border: none;
             border-radius: 50px; cursor: pointer; font-weight: bold;
-            transition: transform 0.1s ease; touch-action: manipulation;
+            touch-action: manipulation;
         }
-
-        #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
-        #noBtn { background: #6c757d; color: white; z-index: 1001; }
-
+        #yesBtn { background: #ff4d6d; color: white; }
+        #noBtn { background: #6c757d; color: white; }
         .moving { position: fixed !important; z-index: 2000 !important; }
-
         .popup {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); background: white;
@@ -55,4 +47,104 @@
 </head>
 <body>
 
-    <img id="mobile-bg" src="
+    <img id="mobile-bg" src="https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true">
+
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
+    </audio>
+
+    <div id="main-card" class="card">
+        <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/shy-cute.gif?raw=true" class="kitty-img">
+        <h1 id="question-text">First, do you think I'm the funniest guy you know?</h1>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="onYesClick()">Yes</button>
+            <button id="noBtn" onclick="onNoClick()" onmouseover="onNoHover()" ontouchstart="onNoHover()">No</button>
+        </div>
+    </div>
+
+    <div id="popup" class="popup">
+        <h2 id="popup-title"></h2>
+        <p id="popup-msg"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        let noCount = 0;
+        const music = document.getElementById('bgMusic');
+
+        const stages = [
+            "First, do you think I'm the funniest guy you know?",
+            "Do you ever get scared of me when I'm hungry?",
+            "Is it true that you have the most handsome boyfriend ever?",
+            "Nirali, will you be my Valentine? ❤️"
+        ];
+
+        const popupMessages = [
+            {title: "🤨 Wait...", msg: "Did you just try to click No?"},
+            {title: "🙄 Nice try!", msg: "That's not even an option today."},
+            {title: "😱 Oh No!", msg: "The 'No' button is definitely broken..."},
+            {title: "❤️ Give up!", msg: "Just say Yes already! 🥰"}
+        ];
+
+        function onNoHover() {
+            const noBtn = document.getElementById('noBtn');
+            noBtn.classList.add('moving');
+            const x = Math.max(10, Math.random() * (window.innerWidth - 110));
+            const y = Math.max(10, Math.random() * (window.innerHeight - 50));
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+
+            if (currentStep === 3) {
+                if (noCount < popupMessages.length) {
+                    document.getElementById('popup-title').innerText = popupMessages[noCount].title;
+                    document.getElementById('popup-msg').innerText = popupMessages[noCount].msg;
+                    document.getElementById('popup').style.display = 'block';
+                    noCount++;
+                }
+                const yesBtn = document.getElementById('yesBtn');
+                let size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+                yesBtn.style.fontSize = (size + 5) + 'px';
+            }
+        }
+
+        function onNoClick() { onNoHover(); }
+
+        function onYesClick() {
+            if (currentStep === 3) {
+                music.play();
+                document.getElementById('main-card').innerHTML = `
+                    <h1>YAY! ❤️ I love you! 🎉</h1>
+                    <p>I found a girl, beautiful and sweet... 🎶</p>
+                    <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" style="width:100%; border-radius:15px;">
+                `;
+                startConfetti();
+            } else {
+                currentStep++;
+                document.getElementById('question-text').innerText = stages[currentStep];
+                const noBtn = document.getElementById('noBtn');
+                noBtn.classList.remove('moving');
+                noBtn.style.position = 'relative';
+                noBtn.style.left = 'auto';
+                noBtn.style.top = 'auto';
+            }
+        }
+
+        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+
+        function startConfetti() {
+            for(let i=0; i<50; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '-20px';
+                heart.style.fontSize = '20px';
+                heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                document.body.appendChild(heart);
+            }
+        }
+    </script>
+    <style> @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } } </style>
+</body>
+</html>
