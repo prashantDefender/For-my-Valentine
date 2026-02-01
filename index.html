@@ -108,7 +108,7 @@
         </div>
 
         <div id="final-screen">
-            <h1>YAY! ❤️ I love you! 🎉</h1>
+            <h1 id="final-text">YAY! ❤️ I love you! 🎉</h1>
             <p>I found a girl, beautiful and sweet... 🎶</p>
             <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" class="celebrate-gif">
         </div>
@@ -132,19 +132,16 @@
         ];
 
         function moveNo() {
-            music.play().catch(() => {});
-            
+            // Note: Music play removed from here
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
            
-            // Make the button jump FIRST
             noBtn.style.position = 'fixed';
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 50);
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            // Delay the popup so she sees the movement
             setTimeout(() => {
                 if (noCount < messages.length) {
                     document.getElementById('popup-title').innerText = messages[noCount].title;
@@ -152,9 +149,8 @@
                     document.getElementById('popup').style.display = 'block';
                     noCount++; 
                 }
-            }, 300); // 0.3 second delay
+            }, 300);
 
-            // Grow Yes button
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
             yesBtn.style.fontSize = (currentSize + 8) + 'px';
             yesBtn.style.padding = (currentSize / 2 + 5) + 'px';
@@ -165,7 +161,11 @@
         }
 
         function showFinal() {
-            music.play();
+            // MUSIC STARTS HERE
+            music.play().catch(error => {
+                console.log("Playback failed, but button was clicked.");
+            });
+            
             document.getElementById('ask-screen').style.display = 'none';
             document.getElementById('noBtn').style.display = 'none';
             document.getElementById('final-screen').style.display = 'block';
