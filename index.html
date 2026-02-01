@@ -19,7 +19,6 @@
         .bg-image {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            /* FIXED IMAGE LINK */
             background-image: url('https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true');
             background-size: cover;
             background-position: center;
@@ -58,7 +57,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.1s ease;
+            transition: all 0.15s ease;
         }
 
         #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
@@ -66,7 +65,7 @@
         #noBtn {
             background: #6c757d;
             color: white;
-            position: relative; /* Fixed: Started as absolute which hides it */
+            position: relative;
             z-index: 1000;
         }
 
@@ -116,8 +115,8 @@
     </div>
 
     <div id="popup" class="popup">
-        <h2 id="popup-title">Nice try!</h2>
-        <p id="popup-msg">That's not even an option.</p>
+        <h2 id="popup-title"></h2>
+        <p id="popup-msg"></p>
         <button onclick="closePopup()">Close</button>
     </div>
 
@@ -133,27 +132,32 @@
         ];
 
         function moveNo() {
-            music.play().catch(e => console.log("Music waiting for interaction"));
+            music.play().catch(() => {});
+            
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
            
+            // Make the button jump FIRST
             noBtn.style.position = 'fixed';
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 50);
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            if (noCount < messages.length) {
-                document.getElementById('popup-title').innerText = messages[noCount].title;
-                document.getElementById('popup-msg').innerText = messages[noCount].msg;
-                document.getElementById('popup').style.display = 'block';
-            }
+            // Delay the popup so she sees the movement
+            setTimeout(() => {
+                if (noCount < messages.length) {
+                    document.getElementById('popup-title').innerText = messages[noCount].title;
+                    document.getElementById('popup-msg').innerText = messages[noCount].msg;
+                    document.getElementById('popup').style.display = 'block';
+                    noCount++; 
+                }
+            }, 300); // 0.3 second delay
 
+            // Grow Yes button
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize + 10) + 'px';
+            yesBtn.style.fontSize = (currentSize + 8) + 'px';
             yesBtn.style.padding = (currentSize / 2 + 5) + 'px';
-           
-            noCount++;
         }
 
         function closePopup() {
