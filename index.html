@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Valentine Qualification</title>
+    <title>Valentine Qualification</title>
     <style>
         body, html {
             height: 100%; width: 100%; margin: 0; padding: 0;
@@ -23,16 +23,10 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             text-align: center; max-width: 350px; width: 85%;
             border: 4px solid #ff4d6d; z-index: 10;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
 
         .kitty-img { width: 120px; margin-bottom: 15px; }
-        h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 20px; min-height: 60px; }
+        h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 20px; min-height: 80px; }
 
         .btn-container {
             display: flex; justify-content: center; gap: 15px;
@@ -48,6 +42,7 @@
         #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
         #noBtn { background: #6c757d; color: white; z-index: 1001; }
 
+        /* The trick: button becomes fixed ONLY when moving */
         .moving { position: fixed !important; z-index: 2000 !important; }
 
         .popup {
@@ -57,9 +52,6 @@
             z-index: 9999; text-align: center; border: 3px solid #ff4d6d; width: 270px;
         }
         .popup button { background: #ff4d6d; color: white; margin-top: 15px; padding: 10px 20px; border-radius: 10px; }
-
-        #final-screen { display: none; }
-        .celebrate-gif { width: 100%; border-radius: 15px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -70,8 +62,14 @@
         <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
     </audio>
 
-    <div id="main-container">
+    <div id="main-card" class="card">
+        <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/shy-cute.gif?raw=true" class="kitty-img">
+        <h1 id="question-text">Loading...</h1>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="onYesClick()">Yes</button>
+            <button id="noBtn" onclick="onNoClick()" onmouseover="onNoHover()" ontouchstart="onNoHover()">No</button>
         </div>
+    </div>
 
     <div id="popup" class="popup">
         <h2 id="popup-title"></h2>
@@ -84,84 +82,80 @@
         let noCount = 0;
         const music = document.getElementById('bgMusic');
 
-        const questions = [
-            { q: "First, do you think I'm the funniest guy you know?", correct: "yes", force: "no" },
-            { q: "Do you ever get tired of my bad jokes?", correct: "no", force: "yes" },
-            { q: "Do you ever get scared of me when I'm hungry?", correct: "yes", force: "no" },
-            { q: "Is it true that you have the most handsome boyfriend ever?", correct: "yes", force: "no" },
-            { q: "Nirali, will you be my Valentine? ❤️", correct: "yes", force: "final" } 
+        const stages = [
+            { q: "First, do you think I'm the funniest guy you know?", correct: "yes" },
+            { q: "Do you ever get scared of me when I'm hungry?", correct: "yes" },
+            { q: "Is it true that you have the most handsome boyfriend ever?", correct: "yes" },
+            { q: "Nirali, will you be my Valentine? ❤️", correct: "yes", final: true }
         ];
 
         const popupMessages = [
             {title: "🤨 Wait...", msg: "Did you just try to click No?"},
             {title: "🙄 Nice try!", msg: "That's not even an option today."},
-            {title: "🤨 Hey!", msg: "Girl, you are mine. Stop playing!"},
             {title: "😱 Oh No!", msg: "The 'No' button is definitely broken..."},
             {title: "❤️ Give up!", msg: "Just say Yes already! 🥰"}
         ];
 
-        function renderQuestion() {
-            const qObj = questions[currentStep];
-            const container = document.getElementById('main-container');
-            
-            // Clear and create new screen
-            container.innerHTML = `
-                <div class="card" id="step-${currentStep}">
-                    <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/shy-cute.gif?raw=true" class="kitty-img">
-                    <h1>${qObj.q}</h1>
-                    <div class="btn-container">
-                        <button id="yesBtn" onclick="handleAnswer('yes')">Yes</button>
-                        <button id="noBtn" onclick="handleAnswer('no')">No</button>
-                    </div>
-                </div>
-            `;
-
-            setupButtonInteractions(qObj);
+        function init() {
+            document.getElementById('question-text').innerText = stages[currentStep].q;
         }
 
-        function setupButtonInteractions(qObj) {
-            const yesBtn = document.getElementById('yesBtn');
+        // --- NO BUTTON LOGIC ---
+        function onNoHover() {
             const noBtn = document.getElementById('noBtn');
-
-            if (qObj.force === "yes") {
-                yesBtn.onmouseover = () => moveButton('yes');
-                yesBtn.ontouchstart = () => moveButton('yes');
-            } else if (qObj.force === "no") {
-                noBtn.onmouseover = () => moveButton('no');
-                noBtn.ontouchstart = () => moveButton('no');
-            }
-            // "final" force logic is handled in handleAnswer
-        }
-
-        function moveButton(type) {
-            const btn = document.getElementById(type + 'Btn');
-            btn.classList.add('moving');
+            noBtn.classList.add('moving');
+            
             const x = Math.max(10, Math.random() * (window.innerWidth - 110));
             const y = Math.max(10, Math.random() * (window.innerHeight - 50));
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-        }
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
 
-        function handleAnswer(answer) {
-            const qObj = questions[currentStep];
-
-            if (qObj.force === "final" && answer === "no") {
-                moveButton('no');
+            // If it's the final question, show popups too
+            if (stages[currentStep].final) {
                 showPopup();
-                growYesButton();
-                return;
-            }
-
-            if (answer === qObj.correct) {
-                currentStep++;
-                if (currentStep < questions.length) {
-                    renderQuestion();
-                } else {
-                    showFinal();
-                }
+                growYes();
             }
         }
 
+        function onNoClick() {
+            // In case they manage to click it on mobile
+            onNoHover();
+        }
+
+        // --- YES BUTTON LOGIC ---
+        function onYesClick() {
+            if (stages[currentStep].final) {
+                celebrate();
+            } else {
+                nextStage();
+            }
+        }
+
+        function nextStage() {
+            currentStep++;
+            // Reset "No" button position for the new screen
+            const noBtn = document.getElementById('noBtn');
+            noBtn.classList.remove('moving');
+            noBtn.style.position = 'relative';
+            noBtn.style.left = 'auto';
+            noBtn.style.top = 'auto';
+
+            document.getElementById('question-text').innerText = stages[currentStep].q;
+        }
+
+        // --- FINAL CELEBRATION ---
+        function celebrate() {
+            music.play(); // Music starts ONLY here
+            document.getElementById('main-card').innerHTML = `
+                <h1>YAY! ❤️ I love you! 🎉</h1>
+                <p>I found a girl, beautiful and sweet... 🎶</p>
+                <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" style="width:100%; border-radius:15px;">
+            `;
+            startConfetti();
+        }
+
+        // --- POPUP & GROW LOGIC ---
         function showPopup() {
             if (noCount < popupMessages.length) {
                 document.getElementById('popup-title').innerText = popupMessages[noCount].title;
@@ -171,48 +165,5 @@
             }
         }
 
-        function growYesButton() {
-            const yesBtn = document.getElementById('yesBtn');
-            let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize + 10) + 'px';
-            yesBtn.style.padding = (currentSize / 2 + 10) + 'px';
-        }
-
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-
-        function showFinal() {
-            music.play();
-            document.getElementById('main-container').innerHTML = `
-                <div class="card">
-                    <h1>YAY! ❤️ I love you! 🎉</h1>
-                    <p>I found a girl, beautiful and sweet... 🎶</p>
-                    <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" class="celebrate-gif">
-                </div>
-            `;
-            confetti();
-        }
-
-        function confetti() {
-            for(let i=0; i<70; i++) {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.style.position = 'fixed';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.top = '-20px';
-                heart.style.fontSize = '25px';
-                heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-                document.body.appendChild(heart);
-            }
-        }
-
-        // Start the first screen
-        renderQuestion();
-    </script>
-
-    <style>
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-    </style>
-</body>
-</html>
+        function growYes() {
+            const yesBtn = document.getElementById
