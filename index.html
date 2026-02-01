@@ -12,17 +12,15 @@
             background-color: #fff0f3;
         }
         
-        /* UPDATED: Better background handling for mobile */
         #mobile-bg {
             position: fixed; 
             top: 0; 
             left: 0; 
-            width: 100vw; 
-            height: 100vh;
+            width: 100%; 
+            height: 100%;
             object-fit: cover; 
             opacity: 0.5; 
             z-index: -1;
-            display: block;
         }
 
         .card {
@@ -32,32 +30,46 @@
             text-align: center; max-width: 350px; width: 85%;
             border: 4px solid #ff4d6d; z-index: 10;
         }
+
         .kitty-img { width: 120px; margin-bottom: 15px; }
         h1 { color: #ff4d6d; font-size: 1.4rem; margin-bottom: 20px; min-height: 80px; }
+        
+        /* FIXED ALIGNMENT */
         .btn-container {
-            display: flex; justify-content: center; gap: 15px;
-            min-height: 120px; position: relative;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            min-height: 50px; /* Reduced height to keep buttons in line */
+            position: relative;
         }
+
         button {
-            padding: 12px 28px; font-size: 1.1rem; border: none;
+            min-width: 100px; /* Ensures buttons are same size */
+            padding: 12px 0; 
+            font-size: 1.1rem; border: none;
             border-radius: 50px; cursor: pointer; font-weight: bold;
             touch-action: manipulation;
         }
+
         #yesBtn { background: #ff4d6d; color: white; }
-        #noBtn { background: #6c757d; color: white; }
+        #noBtn { background: #6c757d; color: white; transition: none; }
+
         .moving { position: fixed !important; z-index: 2000 !important; }
+
         .popup {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); background: white;
             padding: 25px; border-radius: 20px; box-shadow: 0 0 100px rgba(0,0,0,0.5);
             z-index: 9999; text-align: center; border: 3px solid #ff4d6d; width: 270px;
         }
-        .popup button { background: #ff4d6d; color: white; margin-top: 15px; padding: 10px 20px; border-radius: 10px; }
+        .popup button { background: #ff4d6d; color: white; margin-top: 15px; padding: 10px 20px; border-radius: 10px; width: auto; min-width: 80px; }
     </style>
 </head>
 <body>
 
-    <img id="mobile-bg" src="https://raw.githubusercontent.com/prashantDefender/For-my-Valentine/main/IMG-20260110-WA0007.jpg" alt="background">
+    <img id="mobile-bg" src="https://prashantdefender.github.io/For-my-Valentine/IMG-20260110-WA0007.jpg" alt="background">
 
     <audio id="bgMusic" loop>
         <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
@@ -100,8 +112,11 @@
         function onNoHover() {
             const noBtn = document.getElementById('noBtn');
             noBtn.classList.add('moving');
+            
+            // Random movement within phone screen boundaries
             const x = Math.max(10, Math.random() * (window.innerWidth - 110));
             const y = Math.max(10, Math.random() * (window.innerHeight - 50));
+            
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
@@ -115,46 +130,3 @@
                 const yesBtn = document.getElementById('yesBtn');
                 let size = parseFloat(window.getComputedStyle(yesBtn).fontSize);
                 yesBtn.style.fontSize = (size + 5) + 'px';
-            }
-        }
-
-        function onNoClick() { onNoHover(); }
-
-        function onYesClick() {
-            if (currentStep === 3) {
-                music.play();
-                document.getElementById('main-card').innerHTML = `
-                    <h1>YAY! ❤️ I love you! 🎉</h1>
-                    <p>I found a girl, beautiful and sweet... 🎶</p>
-                    <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" style="width:100%; border-radius:15px;">
-                `;
-                startConfetti();
-            } else {
-                currentStep++;
-                document.getElementById('question-text').innerText = stages[currentStep];
-                const noBtn = document.getElementById('noBtn');
-                noBtn.classList.remove('moving');
-                noBtn.style.position = 'relative';
-                noBtn.style.left = 'auto';
-                noBtn.style.top = 'auto';
-            }
-        }
-
-        function closePopup() { document.getElementById('popup').style.display = 'none'; }
-
-        function startConfetti() {
-            for(let i=0; i<50; i++) {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.style.position = 'fixed';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.top = '-20px';
-                heart.style.fontSize = '20px';
-                heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-                document.body.appendChild(heart);
-            }
-        }
-    </script>
-    <style> @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } } </style>
-</body>
-</html>
