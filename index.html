@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+,<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,7 +42,6 @@
         #yesBtn { background: #ff4d6d; color: white; z-index: 1001; }
         #noBtn { background: #6c757d; color: white; z-index: 1001; }
 
-        /* The trick: button becomes fixed ONLY when moving */
         .moving { position: fixed !important; z-index: 2000 !important; }
 
         .popup {
@@ -56,114 +55,4 @@
 </head>
 <body>
 
-    <img id="mobile-bg" src="https://github.com/prashantDefender/For-my-Valentine/blob/main/IMG-20260110-WA0007.jpg?raw=true">
-
-    <audio id="bgMusic" loop>
-        <source src="https://github.com/prashantDefender/For-my-Valentine/blob/main/Edd_Sheeran_-_Perfect_(mp3.pm).mp3?raw=true" type="audio/mpeg">
-    </audio>
-
-    <div id="main-card" class="card">
-        <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/shy-cute.gif?raw=true" class="kitty-img">
-        <h1 id="question-text">Loading...</h1>
-        <div class="btn-container">
-            <button id="yesBtn" onclick="onYesClick()">Yes</button>
-            <button id="noBtn" onclick="onNoClick()" onmouseover="onNoHover()" ontouchstart="onNoHover()">No</button>
-        </div>
-    </div>
-
-    <div id="popup" class="popup">
-        <h2 id="popup-title"></h2>
-        <p id="popup-msg"></p>
-        <button onclick="closePopup()">Close</button>
-    </div>
-
-    <script>
-        let currentStep = 0;
-        let noCount = 0;
-        const music = document.getElementById('bgMusic');
-
-        const stages = [
-            { q: "First, do you think I'm the funniest guy you know?", correct: "yes" },
-            { q: "Do you ever get scared of me when I'm hungry?", correct: "yes" },
-            { q: "Is it true that you have the most handsome boyfriend ever?", correct: "yes" },
-            { q: "Nirali, will you be my Valentine? ❤️", correct: "yes", final: true }
-        ];
-
-        const popupMessages = [
-            {title: "🤨 Wait...", msg: "Did you just try to click No?"},
-            {title: "🙄 Nice try!", msg: "That's not even an option today."},
-            {title: "😱 Oh No!", msg: "The 'No' button is definitely broken..."},
-            {title: "❤️ Give up!", msg: "Just say Yes already! 🥰"}
-        ];
-
-        function init() {
-            document.getElementById('question-text').innerText = stages[currentStep].q;
-        }
-
-        // --- NO BUTTON LOGIC ---
-        function onNoHover() {
-            const noBtn = document.getElementById('noBtn');
-            noBtn.classList.add('moving');
-            
-            const x = Math.max(10, Math.random() * (window.innerWidth - 110));
-            const y = Math.max(10, Math.random() * (window.innerHeight - 50));
-            
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-
-            // If it's the final question, show popups too
-            if (stages[currentStep].final) {
-                showPopup();
-                growYes();
-            }
-        }
-
-        function onNoClick() {
-            // In case they manage to click it on mobile
-            onNoHover();
-        }
-
-        // --- YES BUTTON LOGIC ---
-        function onYesClick() {
-            if (stages[currentStep].final) {
-                celebrate();
-            } else {
-                nextStage();
-            }
-        }
-
-        function nextStage() {
-            currentStep++;
-            // Reset "No" button position for the new screen
-            const noBtn = document.getElementById('noBtn');
-            noBtn.classList.remove('moving');
-            noBtn.style.position = 'relative';
-            noBtn.style.left = 'auto';
-            noBtn.style.top = 'auto';
-
-            document.getElementById('question-text').innerText = stages[currentStep].q;
-        }
-
-        // --- FINAL CELEBRATION ---
-        function celebrate() {
-            music.play(); // Music starts ONLY here
-            document.getElementById('main-card').innerHTML = `
-                <h1>YAY! ❤️ I love you! 🎉</h1>
-                <p>I found a girl, beautiful and sweet... 🎶</p>
-                <img src="https://github.com/prashantDefender/For-my-Valentine/blob/main/aww.gif?raw=true" style="width:100%; border-radius:15px;">
-            `;
-            startConfetti();
-        }
-
-        // --- POPUP & GROW LOGIC ---
-        function showPopup() {
-            if (noCount < popupMessages.length) {
-                document.getElementById('popup-title').innerText = popupMessages[noCount].title;
-                document.getElementById('popup-msg').innerText = popupMessages[noCount].msg;
-                document.getElementById('popup').style.display = 'block';
-                noCount++;
-            }
-        }
-
-        function growYes() {
-            const yesBtn = document.getElementById
+    <img id="mobile-bg" src="
